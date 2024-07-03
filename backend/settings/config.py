@@ -6,8 +6,8 @@ class Settings(BaseSettings):
     TESTING: bool = False
     MINIO: dict = {
         'endpoint': 'minio:9000',
-        'access_key': 'JKiCQGtuxxRpvOgSE0WK',
-        'secret_key': 'kRN2IyJETvnbTvNACvXZK16XmGOx7n8cylBoZzDK'
+        'access_key': '8sHkXxnDc6RW1CrN8HNC',
+        'secret_key': 'Qh0NzyYaQfHKomT8M0yqXKcnEsEj0kWDsMIBNUsn'
     }
     TOKEN: str = 'p0qBw9zqvAAH7FNn3UNqBpC4t'
     PASSWORD: str = 'qBpC4t'

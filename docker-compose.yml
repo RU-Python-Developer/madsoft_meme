@@ -1,0 +1,56 @@
+version: '3.9'
+
+volumes:
+  minio-storage:
+  Server:
+    external: true
+
+services:
+
+  db:
+    container_name: db
+    image: postgres
+    command: "-c logging_collector=on"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: Ngeom0booyae2hi7quuo8oonohxahVohzooja6
+      POSTGRES_DB: postgres_db
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "Server:/var/lib/postgresql/data/"
+    ports:
+      - "5432:5432"
+
+  backend:      
+      # container_name: backend
+      build: ./backend
+           
+      command: bash -c "alembic revision --autogenerate && alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 5000 --reload"
+      ports:
+        - "5000:5000"
+      restart: always
+      depends_on:
+        - db
+        - minio
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - "./backend/:/backend/"
+
+  minio:
+   image: minio/minio:latest
+   command: server --console-address ":9001" /data/
+   restart: always
+   ports:
+     - "9000:9000"
+     - "9001:9001"
+   environment:
+     MINIO_ROOT_USER: tech
+     MINIO_ROOT_PASSWORD: minio123
+   volumes:
+     - minio-storage:/data
+   healthcheck:
+    #  test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+     interval: 30s
+     timeout: 20s
+     retries: 3
